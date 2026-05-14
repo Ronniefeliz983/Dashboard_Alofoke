@@ -219,8 +219,6 @@ if df_master_raw is None or df_chat_raw is None:
     st.stop()
 
 
-
-
 # ─────────────────────────────────────────────
 # TOPBAR + NAVEGACIÓN
 # ─────────────────────────────────────────────
@@ -230,7 +228,7 @@ nav_section = params.get("section", "general")
 if nav_section == "general":
     seccion_activa = "📊 Vista General"
 elif nav_section == "bots":
-    seccion_activa = "🤖 Análisis de Tráfico Automatizado"
+    seccion_activa = "📊 Análisis de Patrones de Mensajes"
 else:
     seccion_activa = "📈 Engagement y Densidad"
 
@@ -244,7 +242,7 @@ st.markdown(f"""
         <span class="topbar-brand">📊 Telemetría</span>
         <nav class="topbar-nav">
             <a href="?section=general" target="_self" class="nav-link {is_gen}">📊 Vista General</a>
-            <a href="?section=bots" target="_self" class="nav-link {is_bot}">🤖 Tráfico Automatizado</a>
+            <a href="?section=bots" target="_self" class="nav-link {is_bot}">📊 Patrones de Mensajes</a>
             <a href="?section=engagement" target="_self" class="nav-link {is_eng}">📈 Engagement</a>
         </nav>
     </div>
@@ -322,7 +320,6 @@ def fmt_k(v):
     if abs(v) >= 1_000_000: return f"{v/1_000_000:.2f}M"
     if abs(v) >= 1_000:     return f"{v/1_000:.1f}k"
     return f"{int(v):,}"
-
 
 
 # =====================================================================
@@ -413,7 +410,7 @@ if seccion_activa == "📊 Vista General":
             hovertemplate='<b>%{x|%d/%m %H:%M}</b><br>💬 Msgs/min: <b>%{y:,.0f}</b><extra></extra>',
         ), secondary_y=True)
         fig_main.update_layout(
-            height=300,
+            height=380,
             paper_bgcolor='#ffffff', plot_bgcolor='#ffffff',
             hovermode='x unified',
             margin=dict(t=36,b=40,l=60,r=70),
@@ -451,9 +448,8 @@ if seccion_activa == "📊 Vista General":
             title_standoff=8,
         )
         st.plotly_chart(fig_main, use_container_width=True, config={'displayModeBar': False})
+        st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
 
-    st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
-        
     col_sp, col_dv = st.columns([3, 2], gap="medium")
     with col_sp:
         if not df_chat.empty:
@@ -517,7 +513,7 @@ if seccion_activa == "📊 Vista General":
                 name='Δ Viewers',
             ))
             fig_dv.update_layout(
-                height=280,
+                height=340,
                 paper_bgcolor='#ffffff', plot_bgcolor='#ffffff',
                 margin=dict(t=8,b=44,l=60,r=16),
                 showlegend=False,
@@ -546,12 +542,12 @@ if seccion_activa == "📊 Vista General":
             )
             st.plotly_chart(fig_dv, use_container_width=True, config={'displayModeBar': False})
         st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
-        
+
 
 # ─────────────────────────────────────────────
-elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
+elif seccion_activa == "📊 Análisis de Patrones de Mensajes":
 
-    st.markdown('<p class="section-label">Análisis de Comportamiento Inusual</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-label">Análisis de Comportamiento en el Chat</p>', unsafe_allow_html=True)
 
     bots_unicos  = df_bots['Autor'].nunique() if not df_bots.empty else 0
     intervalo_min = df_bots['Intervalo'].min() if not df_bots.empty and 'Intervalo' in df_bots.columns else 0.0
@@ -563,8 +559,8 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
         <div class="kpi-card slate">
             <div class="kpi-label">Mensajes con Patrón Repetitivo</div>
             <div class="kpi-value">{len(df_bots):,}</div>
-            <div class="kpi-sub"><i class="ti ti-robot"></i> ~{pct_trafico:.2f}% del tráfico total</div>
-            <i class="ti ti-robot kpi-icon-bg"></i>
+            <div class="kpi-sub"><i class="ti ti-message-repeat"></i> ~{pct_trafico:.2f}% del tráfico total</div>
+            <i class="ti ti-message-repeat kpi-icon-bg"></i>
         </div>
         <div class="kpi-card darkred">
             <div class="kpi-label">Frecuencia Media de Envío</div>
@@ -593,8 +589,9 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<p class="section-label" style="margin-top:14px">Tabla de Fingerprint y Actividad Bot por Cuenta</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-label" style="margin-top:14px">Perfil de Cuentas con Actividad Inusual</p>', unsafe_allow_html=True)
 
+    # ── Fila superior: tabla de perfiles + gráfico concentración temporal ──
     col_bt, col_bc = st.columns([3, 2], gap="medium")
 
     with col_bt:
@@ -608,6 +605,7 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
                 )
                 .reset_index()
                 .sort_values('Total_Msgs', ascending=False)
+                .head(10)
             )
             resumen_bots['Cadencia_Avg'] = resumen_bots['Cadencia_Avg'].fillna(0)
 
@@ -625,12 +623,12 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
                 rows_bot += f"""<tr>
                     <td><span class="spam-user">{autor_e}</span></td>
                     <td style="text-align:center;font-weight:700;color:#1a1e2e">{int(r['Total_Msgs']):,}</td>
-<td><div class="bar-wrap"><div class="bar-fill" style="width:{pct_bar}%;background:#3b82f6"></div></div></td>
+                    <td><div class="bar-wrap"><div class="bar-fill" style="width:{pct_bar}%;background:#3b82f6"></div></div></td>
                     <td style="text-align:center;color:#dc2626;font-weight:600">{r['Cadencia_Avg']:.1f}s</td>
                     <td>{nivel}</td>
                 </tr>"""
         else:
-            rows_bot = "<tr><td colspan='5' style='text-align:center;color:#9ba3c0;padding:20px;'>Sin bots detectados en este rango</td></tr>"
+            rows_bot = "<tr><td colspan='5' style='text-align:center;color:#9ba3c0;padding:20px;'>Sin patrones inusuales detectados en este rango</td></tr>"
 
         st.markdown(f"""
         <div class="chart-wrap">
@@ -652,52 +650,12 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
         </div>
         """, unsafe_allow_html=True)
 
-        # Tabla mensajes bot más repetidos
-        if not df_bots.empty:
-            st.markdown('<p class="section-label" style="margin-top:14px">Mensajes Bot Más Repetidos</p>', unsafe_allow_html=True)
-            top_msgs_bot = (
-                df_bots.groupby(['Autor','Mensaje_Limpio']).size()
-                .reset_index(name='Repeticiones')
-                .sort_values('Repeticiones', ascending=False)
-                .head(8).reset_index(drop=True)
-            )
-            max_rep_b = top_msgs_bot['Repeticiones'].max() if len(top_msgs_bot) > 0 else 1
-            rows_mb = ""
-            for i, r in top_msgs_bot.iterrows():
-                bar_pct = int(r['Repeticiones'] / max_rep_b * 100)
-                autor_e = str(r['Autor'])[:14].replace('<','&lt;').replace('>','&gt;')
-                msg_e   = str(r['Mensaje_Limpio'])[:40].replace('<','&lt;').replace('>','&gt;')
-                rep_k   = f"{r['Repeticiones']/1000:.1f}k" if r['Repeticiones'] >= 1000 else str(r['Repeticiones'])
-                rows_mb += f"""<tr>
-                    <td><span class="rank-badge">{i+1}</span></td>
-                    <td><span class="spam-user">{autor_e}</span></td>
-                    <td><span class="spam-msg">{msg_e}</span></td>
-<td><div class="bar-wrap"><div class="bar-fill" style="width:{bar_pct}%;background:#3b82f6"></div></div></td>
-                    <td class="count-cell">{rep_k}</td>
-                </tr>"""
-            st.markdown(f"""
-            <div class="chart-wrap">
-                <div class="chart-header">
-                    <div>
-                        <div class="chart-title">Mensajes con Alta Frecuencia de Repetición</div>
-                        <div class="chart-sub">Cadenas de texto con mayor índice de reenvío por usuario</div>
-                    </div>
-                </div>
-                <div style="padding:10px 16px 14px;">
-                    <table class="spam-table">
-                        <thead><tr><th style="width:24px">#</th><th>Usuario</th><th>Mensaje</th><th style="width:70px">Vol.</th><th style="width:40px;text-align:right">Total</th></tr></thead>
-                        <tbody>{rows_mb}</tbody>
-                    </table>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
     with col_bc:
         st.markdown("""
         <div class="chart-wrap" style="border-radius:10px 10px 0 0;border-bottom:none;padding-bottom:0;">
             <div class="chart-header">
                 <div>
-                    <div class="chart-title">Concentración Temporal de Mensajes Repetitivos</div>
+                    <div class="chart-title">Concentración Temporal de Mensajes con Patrón Inusual</div>
                     <div class="chart-sub">Volumen de mensajes con patrón de alta frecuencia por minuto</div>
                 </div>
             </div>
@@ -708,12 +666,12 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
             bot_por_min = df_bots.groupby('Minuto').size().reset_index(name='Msgs_Bot')
             fig_bot = go.Figure(go.Bar(
                 x=bot_por_min['Minuto'], y=bot_por_min['Msgs_Bot'],
-                name='Mensajes con patrón repetitivo',
+                name='Mensajes con patrón inusual',
                 marker_color='rgba(59,130,246,0.7)', marker_line_width=0,
                 hovertemplate='<b>%{x|%H:%M}</b><br>📨 Mensajes: <b>%{y:,}</b><extra></extra>',
             ))
             fig_bot.update_layout(
-                height=240,
+                height=300,
                 paper_bgcolor='#ffffff', plot_bgcolor='#ffffff',
                 margin=dict(t=8,b=44,l=52,r=16),
                 showlegend=False,
@@ -734,7 +692,71 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
             )
             st.plotly_chart(fig_bot, use_container_width=True, config={'displayModeBar': False})
         st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
-        
+
+    # ── Fila inferior: Top 5 mensajes más repetidos como tabla ──
+    if not df_bots.empty:
+        st.markdown('<p class="section-label" style="margin-top:14px">Top 5 · Mensajes con Mayor Índice de Repetición</p>', unsafe_allow_html=True)
+
+        top_reps = (
+            df_bots.groupby('Mensaje_Limpio').size()
+            .reset_index(name='Repeticiones')
+            .sort_values('Repeticiones', ascending=False)
+            .head(5)
+            .reset_index(drop=True)
+        )
+        max_rep_t = top_reps['Repeticiones'].max() if not top_reps.empty else 1
+
+        rows_top5 = ""
+        medal = ['🥇','🥈','🥉','4°','5°']
+        for i, r in top_reps.iterrows():
+            pct_bar = int(r['Repeticiones'] / max_rep_t * 100)
+            rep_fmt = f"{r['Repeticiones']/1000:.1f}k" if r['Repeticiones'] >= 1000 else f"{int(r['Repeticiones']):,}"
+            pct_total = (r['Repeticiones'] / total_msgs * 100) if total_msgs > 0 else 0
+            msg_e = str(r['Mensaje_Limpio']).replace('<','&lt;').replace('>','&gt;')
+            rows_top5 += f"""<tr>
+                <td style="text-align:center;font-size:14px;padding-right:8px;">{medal[i]}</td>
+                <td style="max-width:420px;">
+                    <span style="font-size:12px;color:#1e293b;font-weight:500;word-break:break-word;">{msg_e}</span>
+                </td>
+                <td style="min-width:100px;padding:0 12px;">
+                    <div style="background:#f1f5f9;border-radius:5px;height:7px;overflow:hidden;">
+                        <div style="width:{pct_bar}%;height:7px;border-radius:5px;background:#3b82f6;"></div>
+                    </div>
+                </td>
+                <td style="text-align:right;font-size:13px;font-weight:700;color:#0f172a;white-space:nowrap;">{rep_fmt}</td>
+                <td style="text-align:right;font-size:10px;color:#94a3b8;white-space:nowrap;padding-left:10px;">{pct_total:.2f}% del chat</td>
+            </tr>"""
+
+        if not rows_top5:
+            rows_top5 = "<tr><td colspan='5' style='text-align:center;color:#9ba3c0;padding:20px;'>Sin datos</td></tr>"
+
+        st.markdown(f"""
+        <div class="chart-wrap">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Top 5 · Cadenas de Texto con Mayor Repetición</div>
+                    <div class="chart-sub">Mensajes enviados de forma idéntica y repetitiva por las cuentas con patrón atípico detectado</div>
+                </div>
+            </div>
+            <div style="padding:12px 20px 16px;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;font-weight:500;padding-bottom:10px;border-bottom:1px solid #f1f5f9;width:32px;">#</th>
+                            <th style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;font-weight:500;padding-bottom:10px;border-bottom:1px solid #f1f5f9;text-align:left;">Cadena de Texto</th>
+                            <th style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;font-weight:500;padding-bottom:10px;border-bottom:1px solid #f1f5f9;width:100px;">Volumen</th>
+                            <th style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;font-weight:500;padding-bottom:10px;border-bottom:1px solid #f1f5f9;text-align:right;width:60px;">Total</th>
+                            <th style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;font-weight:500;padding-bottom:10px;border-bottom:1px solid #f1f5f9;text-align:right;width:90px;">% Chat</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-family:'Inter',sans-serif;">
+                        {rows_top5}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
 
 # ─────────────────────────────────────────────
 elif seccion_activa == "📈 Engagement y Densidad":
@@ -768,7 +790,7 @@ elif seccion_activa == "📈 Engagement y Densidad":
                 hovertemplate='<b>%{x|%H:%M}</b><br>❤️ Likes / Viewers: <b>%{y:.3f}%</b><br><i>(más alto = más engagement real)</i><extra></extra>',
             ), secondary_y=True)
             fig_ratio.update_layout(
-                height=340,
+                height=380,
                 paper_bgcolor='#ffffff', plot_bgcolor='#ffffff',
                 hovermode="x unified",
                 margin=dict(t=40,b=44,l=60,r=70),
@@ -808,7 +830,7 @@ elif seccion_activa == "📈 Engagement y Densidad":
             )
             st.plotly_chart(fig_ratio, use_container_width=True, config={'displayModeBar': False})
         st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
-        
+
     with col_hm:
         st.markdown('<p class="section-label">Densidad: Autores Únicos vs Viewers</p>', unsafe_allow_html=True)
         st.markdown("""
@@ -839,7 +861,7 @@ elif seccion_activa == "📈 Engagement y Densidad":
                 hovertemplate='📅 Día: <b>%{y}</b><br>🕐 Hora: <b>%{x}</b><br>👤 Usuarios únicos que escribieron: <b>%{z:,.0f}</b><extra></extra>',
             ))
             fig_heat.update_layout(
-                height=340,
+                height=380,
                 paper_bgcolor='#ffffff', plot_bgcolor='#ffffff',
                 margin=dict(t=8,b=44,l=60,r=80),
                 font=dict(family='Inter',size=9,color='#9ba3c0'),
@@ -856,7 +878,7 @@ elif seccion_activa == "📈 Engagement y Densidad":
             )
             st.plotly_chart(fig_heat, use_container_width=True, config={'displayModeBar': False})
         st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
-        
+
 
 # ─────────────────────────────────────────────
 # FOOTER
