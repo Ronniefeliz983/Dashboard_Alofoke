@@ -29,8 +29,8 @@ html, body,
 .block-container { padding: 0 !important; max-width: 100% !important; }
 
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 100%) !important;
-    border-right: 1px solid rgba(255,255,255,0.06);
+    background-color: #0f172a !important;
+    border-right: 1px solid #1e293b;
 }
 [data-testid="stSidebar"] * { color: #cbd5e1 !important; }
 
@@ -80,31 +80,28 @@ html, body,
 .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .kpi-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .kpi-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px 18px;
-    position: relative;
+    background: #1a1e2e;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 3px 3px 0 0;
-    background: #3b82f6;
+.kpi-card::before { display: none; }
+.kpi-label { font-size: 11px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 500; }
+.kpi-value { font-size: 26px; font-weight: 500; color: #f0f4ff; line-height: 1; }
+.kpi-sub   { font-size: 11px; margin-top: 6px; display: flex; align-items: center; gap: 4px; color: #4ade80; }
+.kpi-sub.neg { color: #f87171; }
+.kpi-sub.neu { color: #6b7a99; }
+.kpi-icon-bg {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px; color: #a0aec8;
 }
-.kpi-card.slate::before  { background: #64748b; }
-.kpi-card.darkred::before{ background: #dc2626; }
-.kpi-card.green::before  { background: #10b981; }
-.kpi-card.amber::before  { background: #f59e0b; }
-
-.kpi-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; font-weight: 500; }
-.kpi-value { font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.2; }
-.kpi-sub   { font-size: 11px; margin-top: 5px; display: flex; align-items: center; gap: 5px; color: #64748b; }
-.kpi-icon-bg { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 32px; opacity: 0.06; color: #0f172a; }
 
 .chart-wrap { background: #fff; border: 0.5px solid #e2e6f0; border-radius: 10px; overflow: hidden; }
 .chart-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 10px; border-bottom: 0.5px solid #f0f2f5; }
@@ -298,34 +295,44 @@ if seccion_activa == "📊 Vista General":
     st.markdown(f"""
     <div class="kpi-row">
         <div class="kpi-card">
-            <div class="kpi-label">Concurrencia Pico</div>
-            <div class="kpi-value">{fmt_k(max_viewers)}</div>
-            <div class="kpi-sub"><i class="ti ti-activity"></i> Espectadores máx. simultáneos</div>
-            <i class="ti ti-users kpi-icon-bg"></i>
+            <div>
+                <div class="kpi-label">Concurrencia Pico</div>
+                <div class="kpi-value">{fmt_k(max_viewers)}</div>
+                <div class="kpi-sub neu"><i class="ti ti-users"></i> Espectadores máx. simultáneos</div>
+            </div>
+            <div class="kpi-icon-bg"><i class="ti ti-users"></i></div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-label">Fluctuación Máx (+)</div>
-            <div class="kpi-value">+{fmt_k(max_salto_pos)}</div>
-            <div class="kpi-sub"><i class="ti ti-arrow-up-right"></i> Mayor incremento por intervalo</div>
-            <i class="ti ti-chart-line-up kpi-icon-bg"></i>
-        </div>
-        <div class="kpi-card darkred">
-            <div class="kpi-label">Fluctuación Máx (-)</div>
-            <div class="kpi-value">{fmt_k(max_salto_neg)}</div>
-            <div class="kpi-sub"><i class="ti ti-arrow-down-right"></i> Mayor descenso por intervalo</div>
-            <i class="ti ti-chart-line-down kpi-icon-bg"></i>
+            <div>
+                <div class="kpi-label">Fluctuación Máx (+)</div>
+                <div class="kpi-value">+{fmt_k(max_salto_pos)}</div>
+                <div class="kpi-sub neu"><i class="ti ti-chart-line-up"></i> Mayor incremento por intervalo</div>
+            </div>
+            <div class="kpi-icon-bg"><i class="ti ti-chart-line-up"></i></div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-label">Eventos Atípicos</div>
-            <div class="kpi-value">{eventos_atipicos}</div>
-            <div class="kpi-sub"><i class="ti ti-alert-circle"></i> Variaciones > {fmt_k(UMBRAL_ATIPICO)}</div>
-            <i class="ti ti-radar kpi-icon-bg"></i>
+            <div>
+                <div class="kpi-label">Fluctuación Máx (-)</div>
+                <div class="kpi-value">{fmt_k(max_salto_neg)}</div>
+                <div class="kpi-sub neg"><i class="ti ti-chart-line-down"></i> Mayor descenso por intervalo</div>
+            </div>
+            <div class="kpi-icon-bg"><i class="ti ti-chart-line-down"></i></div>
         </div>
-        <div class="kpi-card slate">
-            <div class="kpi-label">Volumen de Chat</div>
-            <div class="kpi-value">{fmt_k(total_msgs)}</div>
-            <div class="kpi-sub"><i class="ti ti-message-2"></i> {autores_unicos:,} autores únicos</div>
-            <i class="ti ti-message-circle kpi-icon-bg"></i>
+        <div class="kpi-card">
+            <div>
+                <div class="kpi-label">Eventos Atípicos</div>
+                <div class="kpi-value">{eventos_atipicos}</div>
+                <div class="kpi-sub neg"><i class="ti ti-radar"></i> Variaciones > {fmt_k(UMBRAL_ATIPICO)}</div>
+            </div>
+            <div class="kpi-icon-bg"><i class="ti ti-radar"></i></div>
+        </div>
+        <div class="kpi-card">
+            <div>
+                <div class="kpi-label">Volumen de Chat</div>
+                <div class="kpi-value">{fmt_k(total_msgs)}</div>
+                <div class="kpi-sub neu"><i class="ti ti-message-circle"></i> {autores_unicos:,} autores únicos</div>
+            </div>
+            <div class="kpi-icon-bg"><i class="ti ti-message-circle"></i></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -509,31 +516,31 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
         <div class="kpi-card slate">
             <div class="kpi-label">Mensajes con Patrón Repetitivo</div>
             <div class="kpi-value">{len(df_bots):,}</div>
-            <div class="kpi-sub"><i class="ti ti-robot"></i> ~{pct_trafico:.2f}% del tráfico total</div>
+            <div class="kpi-sub">~{pct_trafico:.2f}% del tráfico total</div>
             <i class="ti ti-robot kpi-icon-bg"></i>
         </div>
         <div class="kpi-card darkred">
             <div class="kpi-label">Frecuencia Media de Envío</div>
             <div class="kpi-value">{cadencia_avg:.1f} seg</div>
-            <div class="kpi-sub"><i class="ti ti-clock"></i> Velocidad fuera del rango habitual</div>
+            <div class="kpi-sub" style="color:#dc2626;">Velocidad fuera del rango habitual</div>
             <i class="ti ti-clock kpi-icon-bg"></i>
         </div>
-        <div class="kpi-card amber">
+        <div class="kpi-card">
             <div class="kpi-label">Intervalo Mínimo entre Mensajes</div>
             <div class="kpi-value">{intervalo_min:.1f} seg</div>
-            <div class="kpi-sub"><i class="ti ti-bolt"></i> Velocidad no consistente con uso manual</div>
+            <div class="kpi-sub">Velocidad no consistente con uso manual</div>
             <i class="ti ti-bolt kpi-icon-bg"></i>
         </div>
         <div class="kpi-card darkred">
             <div class="kpi-label">Cuentas con Patrón Atípico</div>
             <div class="kpi-value">{bots_unicos:,}</div>
-            <div class="kpi-sub"><i class="ti ti-fingerprint"></i> Perfiles con comportamiento estadísticamente inusual</div>
+            <div class="kpi-sub">Perfiles con comportamiento estadísticamente inusual</div>
             <i class="ti ti-fingerprint kpi-icon-bg"></i>
         </div>
-        <div class="kpi-card green">
+        <div class="kpi-card">
             <div class="kpi-label">% de Redundancia Textual</div>
             <div class="kpi-value">{(df_bots['Mensaje_Limpio'].duplicated().sum() / len(df_bots) * 100) if not df_bots.empty and len(df_bots)>0 else 0:.1f}%</div>
-            <div class="kpi-sub"><i class="ti ti-copy"></i> Proporción de texto duplicado sobre el total</div>
+            <div class="kpi-sub">Proporción de texto duplicado sobre el total</div>
             <i class="ti ti-copy kpi-icon-bg"></i>
         </div>
     </div>
