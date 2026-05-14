@@ -9,7 +9,6 @@ st.set_page_config(
     page_title="Auditoría de Red · Alofoke",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
 
 st.markdown("""
@@ -26,45 +25,62 @@ html, body,
 }
 
 [data-testid="stHeader"] { display: none !important; }
-.block-container { padding: 0 !important; max-width: 100% !important; }
-
-[data-testid="stSidebar"] {
-    background-color: #0f172a !important;
-    border-right: 1px solid #1e293b;
-}
-[data-testid="stSidebar"] * { color: #cbd5e1 !important; }
+.block-container { padding: 24px 32px !important; max-width: 100% !important; }
 
 .topbar {
     background: #ffffff;
-    height: 48px; display: flex; align-items: center;
-    padding: 0 28px; gap: 14px; position: sticky; top: 0; z-index: 100;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: -24px -32px 16px -32px;
+    padding: 0 32px;
     border-bottom: 1px solid #e2e8f0;
+    position: sticky; top: 0; z-index: 100;
 }
-.topbar .brand {
-    font-size: 11px; font-weight: 600; color: #0f172a; letter-spacing: 0.1em;
-    text-transform: uppercase; padding-right: 16px; border-right: 1px solid #e2e8f0;
+.topbar-left { display: flex; align-items: center; gap: 24px; }
+.topbar-brand {
+    font-size: 13px; font-weight: 700; color: #0f172a; letter-spacing: 0.02em;
+    white-space: nowrap;
 }
-.topbar .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 11px; }
-.topbar .bc-active  { color: #0f172a; font-weight: 600; }
-.topbar .bc-sep     { color: #cbd5e1; }
-.topbar .bc-dim     { color: #94a3b8; }
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-link {
+    padding: 7px 16px;
+    font-size: 12px; font-weight: 500; color: #64748b;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.15s;
+}
+.nav-link:hover { color: #0f172a; background: #f1f5f9; }
+.nav-link.active { color: #1d4ed8; background: #eff6ff; font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
 .topbar-pill {
-    background: #eff6ff; border: 0.5px solid #bfdbfe; border-radius: 20px;
-    padding: 4px 12px; font-size: 10px; color: #1d4ed8; display: flex; align-items: center; gap: 5px;
+    background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 20px;
+    padding: 5px 14px; font-size: 11px; color: #1d4ed8; display: flex; align-items: center; gap: 6px; font-weight: 500;
 }
 .topbar-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; display: inline-block; }
 .topbar-avatar {
-    width: 28px; height: 28px; border-radius: 50%; background: #3b82f6;
+    width: 30px; height: 30px; border-radius: 50%; background: #3b82f6;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: #ffffff;
+    font-size: 12px; font-weight: 700; color: #ffffff;
 }
 
-.content-wrap { padding: 20px 28px; display: flex; flex-direction: column; gap: 16px; }
+.separator {
+    height: 1px;
+    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 50%, transparent 100%);
+    margin: 0 32px;
+}
 
 .summary-banner {
-    background: #fff; border: 0.5px solid #e2e6f0; border-left: 3px solid #3b82f6;
-    border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #3b82f6;
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .summary-badge {
     background: #eff6ff; border: 0.5px solid #bfdbfe; border-radius: 6px; padding: 5px 12px;
@@ -77,57 +93,81 @@ html, body,
 .summary-stat .pct { font-size: 20px; font-weight: 600; color: #0f172a; line-height: 1; }
 .summary-stat .lbl { font-size: 9px; color: #9ba3c0; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
 
-.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-.kpi-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.kpi-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .kpi-card {
-    background: #1a1e2e;
-    border-radius: 14px;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    position: relative;
     overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
 }
-.kpi-card::before { display: none; }
-.kpi-label { font-size: 11px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 500; }
-.kpi-value { font-size: 26px; font-weight: 500; color: #f0f4ff; line-height: 1; }
-.kpi-sub   { font-size: 11px; margin-top: 6px; display: flex; align-items: center; gap: 4px; color: #4ade80; }
-.kpi-sub.neg { color: #f87171; }
-.kpi-sub.neu { color: #6b7a99; }
-.kpi-icon-bg {
-    width: 40px; height: 40px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-size: 20px; color: #a0aec8;
+.kpi-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
 }
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: #3b82f6;
+}
+.kpi-card.slate::before  { background: #64748b; }
+.kpi-card.darkred::before{ background: #dc2626; }
+.kpi-card.green::before  { background: #10b981; }
+.kpi-card.amber::before  { background: #f59e0b; }
 
-.chart-wrap { background: #fff; border: 0.5px solid #e2e6f0; border-radius: 10px; overflow: hidden; }
-.chart-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 10px; border-bottom: 0.5px solid #f0f2f5; }
-.chart-title  { font-size: 13px; font-weight: 600; color: #1a1e2e; margin: 0; }
-.chart-sub    { font-size: 11px; color: #6b7290; margin-top: 3px; display: flex; align-items: center; gap: 14px; }
+.kpi-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; font-weight: 500; }
+.kpi-value { font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.2; }
+.kpi-sub   { font-size: 11px; margin-top: 5px; display: flex; align-items: center; gap: 5px; color: #64748b; }
+.kpi-icon-bg { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 32px; opacity: 0.06; color: #0f172a; }
+
+.chart-wrap {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.chart-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.chart-title  { font-size: 13px; font-weight: 600; color: #0f172a; margin: 0; }
+.chart-sub    { font-size: 11px; color: #64748b; margin-top: 3px; display: flex; align-items: center; gap: 14px; }
 .legend-dot   { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
-.legend-dash  { display: inline-block; width: 16px; height: 0; border-top: 2px dotted #64748b; margin-right: 4px; vertical-align: middle; }
+.legend-dash  { display: inline-block; width: 16px; height: 0; border-top: 2px dashed #94a3b8; margin-right: 4px; vertical-align: middle; }
 
 * { font-family: 'Inter', sans-serif !important; }
 
 .spam-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-.spam-table th { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #9ba3c0; font-weight: 500; padding: 0 0 8px 0; border-bottom: 0.5px solid #f0f2f5; text-align: left; }
-.spam-table td { padding: 6px 0; border-bottom: 0.5px solid #f5f5f7; vertical-align: middle; }
+.spam-table th { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; font-weight: 500; padding: 0 0 10px 0; border-bottom: 1px solid #f1f5f9; text-align: left; }
+.spam-table td { padding: 7px 0; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
 .spam-table tr:last-child td { border-bottom: none; }
-.rank-badge { display: inline-flex; width: 18px; height: 18px; background: #eff6ff; border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; color: #3b82f6; font-weight: 600; }
-.spam-msg  { color: #3a4060; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
+.rank-badge { display: inline-flex; width: 20px; height: 20px; background: #eff6ff; border-radius: 6px; align-items: center; justify-content: center; font-size: 10px; color: #3b82f6; font-weight: 700; }
+.spam-msg  { color: #475569; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
 .spam-user { color: #1d4ed8; font-weight: 600; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
-.bar-wrap  { background: #f0f2f5; border-radius: 3px; height: 5px; width: 60px; }
-.bar-fill  { height: 5px; border-radius: 3px; background: #3b82f6; }
-.count-cell { color: #9ba3c0; font-size: 10px; text-align: right; }
+.bar-wrap  { background: #f1f5f9; border-radius: 4px; height: 6px; width: 60px; overflow: hidden; }
+.bar-fill  { height: 6px; border-radius: 4px; background: #3b82f6; }
+.count-cell { color: #94a3b8; font-size: 10px; text-align: right; }
 
-.section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: #9ba3c0; font-weight: 500; margin-bottom: -4px; margin-top: 10px; }
-.footer { font-size: 10px; color: #c0c4d0; display: flex; justify-content: space-between; padding: 8px 0 20px; letter-spacing: 0.06em; }
+.section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; font-weight: 500; margin-bottom: 0; margin-top: 14px; }
+.footer {
+    font-size: 10px; color: #94a3b8;
+    display: flex; justify-content: space-between;
+    padding: 12px 0 24px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
 
 [data-testid="stPlotlyChart"] { margin: 0 !important; padding: 0 !important; }
-[data-testid="stPlotlyChart"] > div { border-radius: 0 0 10px 10px !important; background: #fff !important; }
+[data-testid="stPlotlyChart"] > div { border-radius: 0 0 12px 12px !important; background: #fff !important; }
 
 /* Badge de nivel para bots */
 .nivel-critico { background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:5px;padding:2px 8px;font-size:9px;font-weight:600; }
@@ -179,27 +219,66 @@ if df_master_raw is None or df_chat_raw is None:
     st.stop()
 
 
+
+
 # ─────────────────────────────────────────────
-# SIDEBAR
+# TOPBAR + NAVEGACIÓN
+# ─────────────────────────────────────────────
+params = st.query_params
+nav_section = params.get("section", "general")
+
+if nav_section == "general":
+    seccion_activa = "📊 Vista General"
+elif nav_section == "bots":
+    seccion_activa = "🤖 Análisis de Tráfico Automatizado"
+else:
+    seccion_activa = "📈 Engagement y Densidad"
+
+is_gen = 'active' if nav_section == 'general' else ''
+is_bot = 'active' if nav_section == 'bots' else ''
+is_eng = 'active' if nav_section == 'engagement' else ''
+
+st.markdown(f"""
+<div class="topbar">
+    <div class="topbar-left">
+        <span class="topbar-brand">📊 Telemetría</span>
+        <nav class="topbar-nav">
+            <a href="?section=general" target="_self" class="nav-link {is_gen}">📊 Vista General</a>
+            <a href="?section=bots" target="_self" class="nav-link {is_bot}">🤖 Tráfico Automatizado</a>
+            <a href="?section=engagement" target="_self" class="nav-link {is_eng}">📈 Engagement</a>
+        </nav>
+    </div>
+    <div class="topbar-right">
+        <span class="topbar-pill"><span class="dot"></span> Live · Pipeline Activo</span>
+        <span class="topbar-avatar">TF</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────
+# FILTROS (colapsables)
 # ─────────────────────────────────────────────
 min_time = df_master_raw['Timestamp'].min().to_pydatetime()
 max_time = df_master_raw['Timestamp'].max().to_pydatetime()
 
-with st.sidebar:
-    st.markdown("## 🗂️ Navegación TFG")
-    seccion_activa = st.radio(
-        "Módulos de Auditoría:",
-        ["📊 Vista General", "🤖 Análisis de Tráfico Automatizado", "📈 Engagement y Densidad"]
-    )
-    st.markdown("---")
-    st.markdown("### ⚙️ Filtros Globales")
-    time_range = st.slider(
-        "Ventana de Tiempo",
-        min_value=min_time, max_value=max_time, value=(min_time, max_time),
-        format="DD/MM - HH:mm"
-    )
-    search_user = st.text_input("Filtrar por Usuario", placeholder="Ej: @Usuario...")
+show_filters = st.checkbox("Mostrar filtros", value=True, label_visibility="collapsed")
 
+if show_filters:
+    c1, c2 = st.columns([3, 1], gap="large")
+    with c1:
+        time_range = st.slider(
+            "Ventana de Tiempo",
+            min_value=min_time, max_value=max_time, value=(min_time, max_time),
+            format="DD/MM - HH:mm",
+            label_visibility="collapsed",
+        )
+    with c2:
+        search_user = st.text_input("Filtrar por Usuario", placeholder="Buscar @usuario...", label_visibility="collapsed")
+else:
+    time_range = (min_time, max_time)
+    search_user = ""
+
+st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # PROCESAMIENTO GLOBAL
@@ -245,28 +324,6 @@ def fmt_k(v):
     return f"{int(v):,}"
 
 
-# ─────────────────────────────────────────────
-# TOPBAR
-# ─────────────────────────────────────────────
-st.markdown("""
-<div class="topbar">
-    <span class="brand">📊 Telemetría</span>
-    <div class="breadcrumb">
-        <span class="bc-active">Reporte Técnico</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-dim">Alofoke Live</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-dim">Auditoría de Red</span>
-    </div>
-    <div class="topbar-right">
-        <div class="topbar-pill"><span class="dot"></span> TFG Data Pipeline</div>
-        <div class="topbar-avatar">TF</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown('<div class="content-wrap">', unsafe_allow_html=True)
-
 
 # =====================================================================
 # SECCIONES
@@ -295,44 +352,34 @@ if seccion_activa == "📊 Vista General":
     st.markdown(f"""
     <div class="kpi-row">
         <div class="kpi-card">
-            <div>
-                <div class="kpi-label">Concurrencia Pico</div>
-                <div class="kpi-value">{fmt_k(max_viewers)}</div>
-                <div class="kpi-sub neu"><i class="ti ti-users"></i> Espectadores máx. simultáneos</div>
-            </div>
-            <div class="kpi-icon-bg"><i class="ti ti-users"></i></div>
+            <div class="kpi-label">Concurrencia Pico</div>
+            <div class="kpi-value">{fmt_k(max_viewers)}</div>
+            <div class="kpi-sub"><i class="ti ti-activity"></i> Espectadores máx. simultáneos</div>
+            <i class="ti ti-users kpi-icon-bg"></i>
         </div>
         <div class="kpi-card">
-            <div>
-                <div class="kpi-label">Fluctuación Máx (+)</div>
-                <div class="kpi-value">+{fmt_k(max_salto_pos)}</div>
-                <div class="kpi-sub neu"><i class="ti ti-chart-line-up"></i> Mayor incremento por intervalo</div>
-            </div>
-            <div class="kpi-icon-bg"><i class="ti ti-chart-line-up"></i></div>
+            <div class="kpi-label">Fluctuación Máx (+)</div>
+            <div class="kpi-value">+{fmt_k(max_salto_pos)}</div>
+            <div class="kpi-sub"><i class="ti ti-arrow-up-right"></i> Mayor incremento por intervalo</div>
+            <i class="ti ti-chart-line-up kpi-icon-bg"></i>
+        </div>
+        <div class="kpi-card darkred">
+            <div class="kpi-label">Fluctuación Máx (-)</div>
+            <div class="kpi-value">{fmt_k(max_salto_neg)}</div>
+            <div class="kpi-sub"><i class="ti ti-arrow-down-right"></i> Mayor descenso por intervalo</div>
+            <i class="ti ti-chart-line-down kpi-icon-bg"></i>
         </div>
         <div class="kpi-card">
-            <div>
-                <div class="kpi-label">Fluctuación Máx (-)</div>
-                <div class="kpi-value">{fmt_k(max_salto_neg)}</div>
-                <div class="kpi-sub neg"><i class="ti ti-chart-line-down"></i> Mayor descenso por intervalo</div>
-            </div>
-            <div class="kpi-icon-bg"><i class="ti ti-chart-line-down"></i></div>
+            <div class="kpi-label">Eventos Atípicos</div>
+            <div class="kpi-value">{eventos_atipicos}</div>
+            <div class="kpi-sub"><i class="ti ti-alert-circle"></i> Variaciones > {fmt_k(UMBRAL_ATIPICO)}</div>
+            <i class="ti ti-radar kpi-icon-bg"></i>
         </div>
-        <div class="kpi-card">
-            <div>
-                <div class="kpi-label">Eventos Atípicos</div>
-                <div class="kpi-value">{eventos_atipicos}</div>
-                <div class="kpi-sub neg"><i class="ti ti-radar"></i> Variaciones > {fmt_k(UMBRAL_ATIPICO)}</div>
-            </div>
-            <div class="kpi-icon-bg"><i class="ti ti-radar"></i></div>
-        </div>
-        <div class="kpi-card">
-            <div>
-                <div class="kpi-label">Volumen de Chat</div>
-                <div class="kpi-value">{fmt_k(total_msgs)}</div>
-                <div class="kpi-sub neu"><i class="ti ti-message-circle"></i> {autores_unicos:,} autores únicos</div>
-            </div>
-            <div class="kpi-icon-bg"><i class="ti ti-message-circle"></i></div>
+        <div class="kpi-card slate">
+            <div class="kpi-label">Volumen de Chat</div>
+            <div class="kpi-value">{fmt_k(total_msgs)}</div>
+            <div class="kpi-sub"><i class="ti ti-message-2"></i> {autores_unicos:,} autores únicos</div>
+            <i class="ti ti-message-circle kpi-icon-bg"></i>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -405,8 +452,8 @@ if seccion_activa == "📊 Vista General":
         )
         st.plotly_chart(fig_main, use_container_width=True, config={'displayModeBar': False})
 
-    st.markdown('<div style="background:#fff;border:0.5px solid #e2e6f0;border-top:none;border-radius:0 0 10px 10px;height:6px;margin-top:-6px;"></div>', unsafe_allow_html=True)
-
+    st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
+        
     col_sp, col_dv = st.columns([3, 2], gap="medium")
     with col_sp:
         if not df_chat.empty:
@@ -498,8 +545,8 @@ if seccion_activa == "📊 Vista General":
                 tickfont=dict(size=9,color='#9ba3c0'),
             )
             st.plotly_chart(fig_dv, use_container_width=True, config={'displayModeBar': False})
-        st.markdown('<div style="background:#fff;border:0.5px solid #e2e6f0;border-top:none;border-radius:0 0 10px 10px;height:6px;margin-top:-6px;"></div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
+        
 
 # ─────────────────────────────────────────────
 elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
@@ -516,31 +563,31 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
         <div class="kpi-card slate">
             <div class="kpi-label">Mensajes con Patrón Repetitivo</div>
             <div class="kpi-value">{len(df_bots):,}</div>
-            <div class="kpi-sub">~{pct_trafico:.2f}% del tráfico total</div>
+            <div class="kpi-sub"><i class="ti ti-robot"></i> ~{pct_trafico:.2f}% del tráfico total</div>
             <i class="ti ti-robot kpi-icon-bg"></i>
         </div>
         <div class="kpi-card darkred">
             <div class="kpi-label">Frecuencia Media de Envío</div>
             <div class="kpi-value">{cadencia_avg:.1f} seg</div>
-            <div class="kpi-sub" style="color:#dc2626;">Velocidad fuera del rango habitual</div>
+            <div class="kpi-sub"><i class="ti ti-clock"></i> Velocidad fuera del rango habitual</div>
             <i class="ti ti-clock kpi-icon-bg"></i>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card amber">
             <div class="kpi-label">Intervalo Mínimo entre Mensajes</div>
             <div class="kpi-value">{intervalo_min:.1f} seg</div>
-            <div class="kpi-sub">Velocidad no consistente con uso manual</div>
+            <div class="kpi-sub"><i class="ti ti-bolt"></i> Velocidad no consistente con uso manual</div>
             <i class="ti ti-bolt kpi-icon-bg"></i>
         </div>
         <div class="kpi-card darkred">
             <div class="kpi-label">Cuentas con Patrón Atípico</div>
             <div class="kpi-value">{bots_unicos:,}</div>
-            <div class="kpi-sub">Perfiles con comportamiento estadísticamente inusual</div>
+            <div class="kpi-sub"><i class="ti ti-fingerprint"></i> Perfiles con comportamiento estadísticamente inusual</div>
             <i class="ti ti-fingerprint kpi-icon-bg"></i>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card green">
             <div class="kpi-label">% de Redundancia Textual</div>
             <div class="kpi-value">{(df_bots['Mensaje_Limpio'].duplicated().sum() / len(df_bots) * 100) if not df_bots.empty and len(df_bots)>0 else 0:.1f}%</div>
-            <div class="kpi-sub">Proporción de texto duplicado sobre el total</div>
+            <div class="kpi-sub"><i class="ti ti-copy"></i> Proporción de texto duplicado sobre el total</div>
             <i class="ti ti-copy kpi-icon-bg"></i>
         </div>
     </div>
@@ -686,8 +733,8 @@ elif seccion_activa == "🤖 Análisis de Tráfico Automatizado":
                 title_standoff=6,
             )
             st.plotly_chart(fig_bot, use_container_width=True, config={'displayModeBar': False})
-        st.markdown('<div style="background:#fff;border:0.5px solid #e2e6f0;border-top:none;border-radius:0 0 10px 10px;height:6px;margin-top:-6px;"></div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
+        
 
 # ─────────────────────────────────────────────
 elif seccion_activa == "📈 Engagement y Densidad":
@@ -760,8 +807,8 @@ elif seccion_activa == "📈 Engagement y Densidad":
                 title_standoff=8,
             )
             st.plotly_chart(fig_ratio, use_container_width=True, config={'displayModeBar': False})
-        st.markdown('<div style="background:#fff;border:0.5px solid #e2e6f0;border-top:none;border-radius:0 0 10px 10px;height:6px;margin-top:-6px;"></div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
+        
     with col_hm:
         st.markdown('<p class="section-label">Densidad: Autores Únicos vs Viewers</p>', unsafe_allow_html=True)
         st.markdown("""
@@ -808,17 +855,15 @@ elif seccion_activa == "📈 Engagement y Densidad":
                 tickfont=dict(size=9, color='#9ba3c0'),
             )
             st.plotly_chart(fig_heat, use_container_width=True, config={'displayModeBar': False})
-        st.markdown('<div style="background:#fff;border:0.5px solid #e2e6f0;border-top:none;border-radius:0 0 10px 10px;height:6px;margin-top:-6px;"></div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;height:6px;margin-top:-8px;"></div>', unsafe_allow_html=True)
+        
 
 # ─────────────────────────────────────────────
 # FOOTER
 # ─────────────────────────────────────────────
 st.markdown(f"""
-<div class="footer" style="margin-top:30px;">
-    <span>REPORTE TÉCNICO DE RED · {len(df_master):,} lecturas de telemetría procesadas</span>
+<div class="footer">
+    <span>📡 {len(df_master):,} lecturas de telemetría procesadas</span>
     <span>TFG · Análisis Analítico de Datos · 2026</span>
 </div>
 """, unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
